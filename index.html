@@ -61,7 +61,7 @@
             array_ball.pop();
           }
           let randomSpeed = Math.trunc(Math.random() * (10 - 1)) + 1; //スピード1～10段階ランダム
-          let randomSize = Math.trunc(Math.random() * (50 - 1)) + 1; //半径1～50段階ランダム
+          let randomSize = Math.trunc(Math.random() * (50 - 1)) + 1; //半径1～50段階ランダム 
           setTimeout(countup,10000);
           let ball_a = new Ball(e.offsetX,e.offsetY,randomRadian,randomSpeed,randomSize);　//クリック時座標を入れ配列の先頭に格納
           array_ball.unshift(ball_a);
