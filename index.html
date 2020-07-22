@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>canvas tutorial</title>
+    <link href="style.css" type="text/css" rel="stylesheet">
+    <style>
+      #canvas {
+        background: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <script>
+      var canvas = document.getElementById("canvas"); //canvasタグ情報取得
+      // ここにコードを書いていきます
+      var context = canvas.getContext('2d');　//変数circleにcanvas情報入れる
+
+      class Ball{ //クラス定義
+        constructor(x,y,radian,speed,size){
+          this.x = x;
+          this.y = y;
+          this.radian = radian;
+          this.speed = speed;
+          this.size = size;
+          this.vector = {};
+          this.vector.x = Math.cos(this.radian);
+          this.vector.y = Math.sin(this.radian);
+        }
+
+        update(){ //座標移動系定義
+          this.x += this.vector.x * this.speed; //半径1=移動距離1　の時の角度に対するx座標を計算　更新
+          this.y += this.vector.y * this.speed; //半径1=移動距離1　の時の角度に対するy座標を計算　更新
+          console.log(this.x);
+          console.log(this.y);
+          if(this.x < 10 || this.x > canvas.width - 10){ //左右バウンス条件
+            this.vector.x *= -1;
+          }
+          if(this.y < 10 || this.y > canvas.height - 10){ //上下バウンス条件
+            this.vector.y *= -1;
+          }
+        }
+
+        draw(){ //描画系定義
+          context.beginPath();　//パス作成
+          //描写cmd　start
+          context.arc(this.x,this.y,this.size,0,Math.PI * 2, true);　//X座標、Y座標、r、sラジアン変換（0°）、eラジアン変換（360°）、右周りで推移
+          context.strokeStyle = "#fff";　//線の色指定
+          context.stroke();　//線を描写
+          context.closePath();
+        }
+      }
+
+      const array_ball = [];　//クラスballを入れる配列定義
+
+      canvas.addEventListener('click',(e) => {
+        for(let c = 0; c < 40; c++){
+          let randomDegree = Math.trunc(Math.random() * 360); //0~360までの数をランダム生成
+          let randomRadian = randomDegree * (Math.PI / 180); //角度をラジアンへ変換
+          function countup(){
+            array_ball.pop();
+          }
+          let randomSpeed = Math.trunc(Math.random() * (10 - 1)) + 1; //スピード1～10段階ランダム
+          let randomSize = Math.trunc(Math.random() * (50 - 1)) + 1; //半径1～50段階ランダム
+          setTimeout(countup,10000);
+          let ball_a = new Ball(e.offsetX,e.offsetY,randomRadian,randomSpeed,randomSize);　//クリック時座標を入れ配列の先頭に格納
+          array_ball.unshift(ball_a);
+          console.log(array_ball);
+        }
+      });
+
+      loop(); //関数loop実行
+      function loop(){
+        context.clearRect(0,0,canvas.width,canvas.height);
+        for(let i = 0; i < array_ball.length; i++){
+          array_ball[i].draw();
+          array_ball[i].update();
+        }
+        var requestID = requestAnimationFrame(loop);　//戻り値(requestAnimationFrameの完了結果）を変数requestIDへ代入
+      }
+
+    </script>
+  </body>
+
+</html>
