@@ -37,6 +37,21 @@
           if(this.y < 10 || this.y > canvas.height - 10){ //上下バウンス条件
             this.vector.y *= -1;
           }
+          let collisionX = this.x - mouseX;
+          let collisionY = this.y - mouseY;
+          if(collisionX < 0){ //マイナス値で平方根とるとエラー吐く為、整数に戻す
+            collisionX = collisionX * -1;
+          }
+          if(collisionY < 0){
+            collisionY = collisionY * -1;
+          }
+          let collision = Math.sqrt(collisionX * collisionX + collisionY * collisionY);
+          console.log(collision);
+          console.log(this.size);
+          if(collision < this.size){
+            this.vector.x *= -1;
+            this.vector.y *= -1;
+          }
         }
 
         draw(){ //描画系定義
@@ -52,7 +67,7 @@
       const array_ball = [];　//クラスballを入れる配列定義
 
       canvas.addEventListener('click',(e) => {
-        for(let c = 0; c < 40; c++){
+        for(let c = 0; c < 1; c++){
           let randomDegree = Math.trunc(Math.random() * 360); //0~360までの数をランダム生成
           let randomRadian = randomDegree * (Math.PI / 180); //角度をラジアンへ変換
           let randomSpeed = Math.trunc(Math.random() * (10 - 1)) + 1; //スピード1～10段階ランダム
@@ -62,10 +77,11 @@
         }
       });
 
+      let mouseX;
+      let mouseY;
       canvas.addEventListener('mousemove',(e) => {
-        let mouseX = e.pageX;
-        let mouseY = e.pageY;
-        console.log(mouseX);
+        mouseX = e.offsetX;
+        mouseY = e.offsetY;
       });
 
       loop(); //関数loop実行
