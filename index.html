@@ -31,8 +31,6 @@
         update(){ //座標移動系定義
           this.x += this.vector.x * this.speed; //半径1=移動距離1　の時の角度に対するx座標を計算　更新
           this.y += this.vector.y * this.speed; //半径1=移動距離1　の時の角度に対するy座標を計算　更新
-          console.log(this.x);
-          console.log(this.y);
           if(this.x < 10 || this.x > canvas.width - 10){ //左右バウンス条件
             this.vector.x *= -1;
           }
@@ -61,8 +59,13 @@
           let randomSize = Math.trunc(Math.random() * (50 - 1)) + 1; //半径1～50段階ランダム
           let ball_a = new Ball(e.offsetX,e.offsetY,randomRadian,randomSpeed,randomSize);　//クリック時座標を入れ配列の先頭に格納
           array_ball.unshift(ball_a);
-          console.log(array_ball);
         }
+      });
+
+      canvas.addEventListener('mousemove',(e) => {
+        let mouseX = e.pageX;
+        let mouseY = e.pageY;
+        console.log(mouseX);
       });
 
       loop(); //関数loop実行
