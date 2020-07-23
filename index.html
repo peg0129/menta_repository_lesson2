@@ -51,6 +51,9 @@
           if(collision < this.size){
             this.vector.x *= -1;
             this.vector.y *= -1;
+            let reverse = this.size - collision;
+            this.x += this.vector.x * reverse;
+            this.y += this.vector.y * reverse;
           }
         }
 
@@ -93,7 +96,6 @@
         }
         var requestID = requestAnimationFrame(loop);　//戻り値(requestAnimationFrameの完了結果）を変数requestIDへ代入
       }
-
     </script>
   </body>
 
