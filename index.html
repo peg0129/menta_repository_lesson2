@@ -16,6 +16,10 @@
       // ここにコードを書いていきます
       var context = canvas.getContext('2d');　//変数circleにcanvas情報入れる
 
+      function distance(x1, y1, x2, y2) { //2点間の距離を算出
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+      }
+
       class Ball{ //クラス定義
         constructor(x,y,radian,speed,size){
           this.x = x;
@@ -37,21 +41,12 @@
           if(this.y < 10 || this.y > canvas.height - 10){ //上下バウンス条件
             this.vector.y *= -1;
           }
-          let collisionX = this.x - mouseX;
-          let collisionY = this.y - mouseY;
-          if(collisionX < 0){ //マイナス値で平方根とるとエラー吐く為、整数に戻す
-            collisionX = collisionX * -1;
-          }
-          if(collisionY < 0){
-            collisionY = collisionY * -1;
-          }
-          let collision = Math.sqrt(collisionX * collisionX + collisionY * collisionY);
-          console.log(collision);
-          console.log(this.size);
-          if(collision < this.size){
+          let dis = distance(mouseX,mouseY,this.x,this.y);
+          console.log(dis);
+          if(dis < this.size){
             this.vector.x *= -1;
             this.vector.y *= -1;
-            let reverse = this.size - collision;
+            let reverse = this.size - dis;
             this.x += this.vector.x * reverse;
             this.y += this.vector.y * reverse;
           }
@@ -69,13 +64,13 @@
 
       const array_ball = [];　//クラスballを入れる配列定義
 
-      canvas.addEventListener('click',(e) => {
-        for(let c = 0; c < 1; c++){
+      window.addEventListener('load',(e) => {
+        for(let c = 0; c < 40; c++){
           let randomDegree = Math.trunc(Math.random() * 360); //0~360までの数をランダム生成
           let randomRadian = randomDegree * (Math.PI / 180); //角度をラジアンへ変換
           let randomSpeed = Math.trunc(Math.random() * (10 - 1)) + 1; //スピード1～10段階ランダム
           let randomSize = Math.trunc(Math.random() * (50 - 1)) + 1; //半径1～50段階ランダム
-          let ball_a = new Ball(e.offsetX,e.offsetY,randomRadian,randomSpeed,randomSize);　//クリック時座標を入れ配列の先頭に格納
+          let ball_a = new Ball(320,240,randomRadian,randomSpeed,randomSize);　//クリック時座標を入れ配列の先頭に格納
           array_ball.unshift(ball_a);
         }
       });
