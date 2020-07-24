@@ -35,10 +35,10 @@
         update(){ //座標移動系定義
           this.x += this.vector.x * this.speed; //半径1=移動距離1　の時の角度に対するx座標を計算　更新
           this.y += this.vector.y * this.speed; //半径1=移動距離1　の時の角度に対するy座標を計算　更新
-          if(this.x < 10 || this.x > canvas.width - 10){ //左右バウンス条件
+          if(this.x < this.size || this.x > canvas.width - this.size){ //左右バウンス条件
             this.vector.x *= -1;
           }
-          if(this.y < 10 || this.y > canvas.height - 10){ //上下バウンス条件
+          if(this.y < this.size || this.y > canvas.height - this.size){ //上下バウンス条件
             this.vector.y *= -1;
           }
           let dis = distance(mouseX,mouseY,this.x,this.y);
@@ -70,7 +70,7 @@
           let randomRadian = randomDegree * (Math.PI / 180); //角度をラジアンへ変換
           let randomSpeed = Math.trunc(Math.random() * (10 - 1)) + 1; //スピード1～10段階ランダム
           let randomSize = Math.trunc(Math.random() * (50 - 1)) + 1; //半径1～50段階ランダム
-          let ball_a = new Ball(320,240,randomRadian,randomSpeed,randomSize);　//クリック時座標を入れ配列の先頭に格納
+          let ball_a = new Ball(canvas.width / 2,canvas.height / 2,randomRadian,randomSpeed,randomSize);　//クリック時座標を入れ配列の先頭に格納
           array_ball.unshift(ball_a);
         }
       });
