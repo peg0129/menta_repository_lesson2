@@ -41,14 +41,13 @@
           if(this.y < this.size || this.y > canvas.height - this.size){ //上下バウンス条件
             this.vector.y *= -1;
           }
+
           let dis = distance(mouseX,mouseY,this.x,this.y);
           console.log(dis);
           if(dis < this.size){
-            this.vector.x *= -1;
-            this.vector.y *= -1;
-            let reverse = this.size - dis;
-            this.x += this.vector.x * reverse;
-            this.y += this.vector.y * reverse;
+            let ballMouseRad = Math.atan2(this.y - mouseY,this.x - mouseX); //mouseからみたball角度（逃げる方向）
+            this.x += Math.cos(ballMouseRad) * Math.pow(1.3,(this.size - dis)); //2点の距離に応じて加速・減速する処理
+            this.y += Math.sin(ballMouseRad) * Math.pow(1.3,(this.size - dis));
           }
         }
 
@@ -65,7 +64,7 @@
       const array_ball = [];　//クラスballを入れる配列定義
 
       window.addEventListener('load',(e) => {
-        for(let c = 0; c < 40; c++){
+        for(let c = 0; c < 1; c++){
           let randomDegree = Math.trunc(Math.random() * 360); //0~360までの数をランダム生成
           let randomRadian = randomDegree * (Math.PI / 180); //角度をラジアンへ変換
           let randomSpeed = Math.trunc(Math.random() * (10 - 1)) + 1; //スピード1～10段階ランダム
