@@ -20,6 +20,14 @@
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
       }
 
+      function normalize(x, y) {
+        const b = Math.abs(x) + Math.abs(y);
+        return {
+          x: 1 / b * x,
+          y: 1 / b * y
+        };
+      }
+
       class Ball{ //クラス定義
         constructor(x,y,radian,speed,size){
           this.x = x;
@@ -28,28 +36,50 @@
           this.speed = speed;
           this.size = size;
           this.vector = {};
+          this.count = 0;
           this.vector.x = Math.cos(this.radian);
           this.vector.y = Math.sin(this.radian);
+          this.addForceVec = {
+            x:0,
+            y:0
+          };
+          this.addForce = 0;
         }
 
         update(){ //座標移動系定義
-          this.x += this.vector.x * this.speed; //半径1=移動距離1　の時の角度に対するx座標を計算　更新
-          this.y += this.vector.y * this.speed; //半径1=移動距離1　の時の角度に対するy座標を計算　更新
-          if(this.x < this.size || this.x > canvas.width - this.size){ //左右バウンス条件
+          this.x += this.vector.x * this.speed + this.addForceVec.x; //半径1=移動距離1　の時の角度に対するx座標を計算　更新
+          this.y += this.vector.y * this.speed + this.addForceVec.y; //半径1=移動距離1　の時の角度に対するy座標を計算　更新
+          if(this.x < this.size){ //x軸左側バウンス
             this.vector.x *= -1;
+            this.addForceVec.x *= -1;
+            this.x = this.size;
           }
-          if(this.y < this.size || this.y > canvas.height - this.size){ //上下バウンス条件
+          if(this.x > canvas.width - this.size){ //x右側バウンス
+            this.vector.x *= -1;
+            this.addForceVec.x *= -1;
+            this.x = canvas.width - this.size;
+          }
+          if(this.y < this.size){ //y軸上側バウンス
             this.vector.y *= -1;
+            this.addForceVec.y *= -1;
+            this.y = this.size;
           }
+          if(this.y > canvas.height - this.size){ //y軸下側バウンス
+            this.vector.y *= -1;
+            this.addForceVec.y *= -1;
+            this.y = canvas.height - this.size;
+          }
+
           let dis = distance(mouseX,mouseY,this.x,this.y);
-          console.log(dis);
-          if(dis < this.size){
-            this.vector.x *= -1;
-            this.vector.y *= -1;
-            let reverse = this.size - dis;
-            this.x += this.vector.x * reverse;
-            this.y += this.vector.y * reverse;
+          if(dis < 100){
+            let ballMouseRad = Math.atan2(this.y - mouseY,this.x - mouseX); //mouseからみたball角度（逃げる方向）
+
+            this.addForce = (100 - dis) / 100 * 3; //距離100以下で2点の距離が縮まるほどaddForceは大きくなる / 数値を抑える係数？
+            this.addForceVec.x += Math.cos(ballMouseRad) * this.addForce;
+            this.addForceVec.y += Math.sin(ballMouseRad) * this.addForce;
           }
+          this.addForceVec.x *= 0.95; //加えてる力を0に近づける
+          this.addForceVec.y *= 0.95;
         }
 
         draw(){ //描画系定義
@@ -88,6 +118,7 @@
         for(let i = 0; i < array_ball.length; i++){
           array_ball[i].draw();
           array_ball[i].update();
+          console.log(array_ball);
         }
         var requestID = requestAnimationFrame(loop);　//戻り値(requestAnimationFrameの完了結果）を変数requestIDへ代入
       }
